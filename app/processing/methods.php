@@ -17,6 +17,7 @@ database credentials in /dependencies/config.php or Contact Administrator.)</str
             exit(0);
         }
     }
+
     public function searchListByKeyword($service, $part, $params)
     {
         $params = array_filter($params);
@@ -43,8 +44,16 @@ database credentials in /dependencies/config.php or Contact Administrator.)</str
         $db = $this->getDb();
 
         $sql = "INSERT IGNORE INTO videodetails (`videoid`, `videotitle`, `channelid`, `channeltitle`, `description`, `publisheddate`, 
-`thumbnailurl`) VALUES (?,?,?,?,?,?,?)";
+`thumbnailurl`) VALUE (?,?,?,?,?,?,?)";
         $db->prepare($sql)->execute([$vid, $vtitle, $cid, $ctitle, $desc, $date, $thumb]);
+    }
+
+    public function insertVideoList($term, $id, $hash)
+    {
+        $db = $this->getDb();
+
+        $sql = "INSERT IGNORE INTO searchresults (`searchedterm`, `videoid`, `resulthash`) VALUE (?,?,?) ";
+        $db->prepare($sql)->execute([$term, $id, $hash]);
     }
 
 }
