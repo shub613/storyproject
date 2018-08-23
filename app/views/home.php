@@ -58,7 +58,7 @@
         $("#search").click(function () {
             var searchTerm = $('#searchInput').val();
             $.ajax({
-                url: '../../app/controllers/home.php',
+                url: '../controllers/home.php',
                 // dataType: "json",
                 data: {"search": searchTerm},
                 type: "post",
