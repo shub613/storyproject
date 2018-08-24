@@ -47,7 +47,7 @@
             data: {"from": "0"},
             placeholder: '#video-placeholder',
             template: '#video-card-template',
-            element: 'body'
+            element: window
         };
         populateCards(config);
     });
@@ -58,10 +58,10 @@
         <div class="card">
             <img class="card-img-top" src="{{:thumbnailurl}}">
             <div class="card-body">
-                <h5 class="card-title"> {{:videotitle}} </h5>
+                <h6 class="card-title"> {{:~formatSize(videotitle, 35)}} </h6>
                 <h6 class="card-subtitle mb-2 text-muted"> Searched Term : {{:searchedterm}} </h6>
                 <h6 class="card-subtitle mb-2 text-muted"> Channel : {{:channeltitle}} </h6>
-                <p class="card-text">{{:description}}</p>
+                <p class="card-text">{{:~formatSize(description, 60)}}</p>
                 <a href="http://www.youtube.com/watch?v={{:videoid}}" target=_blank class="card-link btn btn-primary
                 btn-sm">Watch This Video</a>
             </div>

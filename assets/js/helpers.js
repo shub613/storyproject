@@ -8,15 +8,15 @@ var counter = 0;
 var helpers = {formatSize: formatSize};
 
 function populateCards(config) {
-    $.ajax({
+    $.getJSON({
         type: "POST",
         url: config.url,
         data: config.data,
         success: function (data) {
-            console.log(data);
-            data = JSON.parse(JSON.stringify(data));
+            // console.log(data);
+            // data = JSON.parse(JSON.stringify(data));
             $(config.placeholder).html('');
-            if (data !== null) {
+            if (data.length > 0) {
                 $.views.settings.allowCode(true);
                 $(config.placeholder).html($(config.template).render(data, helpers));
                 start = showCount;
@@ -40,17 +40,17 @@ function populateCards(config) {
 function infiniteScroll(config) {
     $(config.element).scroll(function () {
         config.data.from = start;
-        if (($(config.element).scrollTop()) >= (($(config.element)[0].scrollHeight) - 1200)) {
+        if (($(config.element).scrollTop()) >= (($(config.placeholder)[0].scrollHeight) - 700)) {
             if (working === false) {
                 working = true;
-                $.ajax({
+                $.getJSON({
                     type: "POST",
                     url: config.url,
                     data: config.data,
                     success: function (data) {
-                        data = JSON.parse(JSON.stringify(data));
+                        // data = JSON.parse(JSON.stringify(data));
                         var postion = $(config.element).scrollTop();
-                        if (data !== null) {
+                        if (data.length > 0) {
                             $(config.placeholder).append($(config.template).render(data, helpers));
                             $(config.element).scrollTop(postion);
                             start += showCount;
