@@ -1,6 +1,5 @@
 <?php
 
-
 class methods
 {
     public function getDb()
@@ -39,21 +38,21 @@ database credentials in /dependencies/config.php or Contact Administrator.)</str
         echo json_encode($response);
     }
 
-    public function insertVideoDetails($vid, $vtitle, $cid, $ctitle, $desc, $date, $thumb)
+    public function insertVideoDetails($vid, $vtitle, $cid, $ctitle, $desc, $date, $thumb, $term)
     {
         $db = $this->getDb();
 
         $stmt = "INSERT IGNORE INTO videodetails (`videoid`, `videotitle`, `channelid`, `channeltitle`, `description`, `publisheddate`, 
-`thumbnailurl`) VALUE (?,?,?,?,?,?,?)";
-        $db->prepare($stmt)->execute([$vid, $vtitle, $cid, $ctitle, $desc, $date, $thumb]);
+`thumbnailurl`, `searchedterm`) VALUE (?,?,?,?,?,?,?,?)";
+        $db->prepare($stmt)->execute([$vid, $vtitle, $cid, $ctitle, $desc, $date, $thumb, $term]);
     }
 
-    public function insertVideoList($term, $id, $hash)
+    public function insertSearchDetails($term, $time)
     {
         $db = $this->getDb();
 
-        $stmt = "INSERT IGNORE INTO searchresults (`searchedterm`, `videoid`, `resulthash`) VALUE (?,?,?) ";
-        $db->prepare($stmt)->execute([$term, $id, $hash]);
+        $stmt = "INSERT INTO searchresults (`searchedterm`, `searchedtime`) VALUE (?,?) ON DUPLICATE KEY UPDATE `searchedtime` = ?";
+        $db->prepare($stmt)->execute([$term, $time, $time]);
     }
 
     public function getVideoDetails($from)
@@ -61,13 +60,54 @@ database credentials in /dependencies/config.php or Contact Administrator.)</str
         $db = $this->getDb();
         $res = [];
         $stmt = "SELECT 
-                  v.videoid, v.videotitle, v.channeltitle, v.description, v.publisheddate, v.thumbnailurl, s.searchedterm 
+                    videoid, videotitle, channeltitle, description, publisheddate, thumbnailurl, searchedterm
                 FROM
-                  videodetails v
-                INNER JOIN
-                  searchresults s ON (v.videoid = s.videoid) LIMIT " . $from . ", 12";
+                    videodetails 
+                LIMIT " . $from . ", 12";
         $sql = $db->prepare($stmt);
         $sql->execute();
+
+        while ($data = $sql->fetch(PDO::FETCH_ASSOC)) {
+            $res[] = $data;
+        }
+        return $res;
+    }
+
+    public function checkSearchStatus($term)
+    {
+        $db = $this->getDb();
+        $stmt = "SELECT 
+                    searchedterm, searchedtime
+                FROM
+                    searchresults
+                WHERE
+                    searchedterm = ?";
+        $sql = $db->prepare($stmt);
+        $sql->execute([$term]);
+        if ($data = $sql->fetch(PDO::FETCH_ASSOC)) {
+            $diff = abs(strtotime($data['searchedtime']) - time()) / 60;
+            if ($diff >= 1) {
+                return 1;
+            } else {
+                return 2;
+            }
+        } else {
+            return 0;
+        }
+    }
+
+    public function getVideosByTerm($term)
+    {
+        $db = $this->getDb();
+        $res = [];
+        $stmt = "SELECT 
+                    videoid, videotitle, description, thumbnailurl
+                FROM
+                    videodetails
+                WHERE
+                    searchedterm = ?";
+        $sql = $db->prepare($stmt);
+        $sql->execute([$term]);
 
         while ($data = $sql->fetch(PDO::FETCH_ASSOC)) {
             $res[] = $data;

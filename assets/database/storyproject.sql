@@ -2,10 +2,9 @@ CREATE DATABASE IF NOT EXISTS `storyproject` DEFAULT CHARACTER SET utf8mb4 COLLA
 USE `storyproject`;
 
 CREATE TABLE `searchresults` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `searchedterm` varchar(255) NOT NULL,
-  `videoid` varchar(128) NOT NULL,
-  `resulthash` varchar(40) NOT NULL
+  `id` int(10) UNSIGNED NOT NULL,
+  `searchedterm` varchar(128) NOT NULL,
+  `searchedtime` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Table for storing returned video ids related to searched results';
 
 CREATE TABLE `videodetails` (
@@ -15,19 +14,20 @@ CREATE TABLE `videodetails` (
   `channeltitle` varchar(255) DEFAULT NULL,
   `description` text,
   `publisheddate` datetime NOT NULL,
-  `thumbnailurl` varchar(255) DEFAULT NULL
+  `thumbnailurl` varchar(255) DEFAULT NULL,
+  `searchedterm` varchar(128) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Table for Storing Video details';
 
 
 ALTER TABLE `searchresults`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `video_id` (`videoid`),
-  ADD UNIQUE KEY `result hash` (`resulthash`),
+  ADD UNIQUE KEY `searchunique` (`searchedterm`),
   ADD KEY `searched term` (`searchedterm`);
 
 ALTER TABLE `videodetails`
-  ADD PRIMARY KEY (`videoid`);
+  ADD PRIMARY KEY (`videoid`),
+  ADD KEY `searchterm` (`searchedterm`);
 
 
 ALTER TABLE `searchresults`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
