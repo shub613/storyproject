@@ -85,7 +85,7 @@ database credentials in /dependencies/config.php or Contact Administrator.)</str
         $sql = $db->prepare($stmt);
         $sql->execute([$term]);
         if ($data = $sql->fetch(PDO::FETCH_ASSOC)) {
-            $diff = abs(strtotime($data['searchedtime']) - time()) / 60;
+            $diff = abs(strtotime($data['searchedtime']) - time()) / 3600;
             if ($diff >= 1) {
                 return 1;
             } else {
