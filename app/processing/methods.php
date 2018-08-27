@@ -5,7 +5,7 @@ class methods
     public function getDb()
     {
         try {
-            $con = new PDO('mysql:host=localhost;dbname=storyproject;charset=utf8mb4', 'root', '');
+            $con = new PDO('mysql:host=localhost;dbname=storyproject;charset=utf8mb4', 'root', 'Root@123$!');
             $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $con->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
             $con->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, false);

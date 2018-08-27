@@ -40,7 +40,7 @@ function populateCards(config) {
 function infiniteScroll(config) {
     $(config.element).scroll(function () {
         config.data.from = start;
-        if (($(config.element).scrollTop()) >= (($(config.placeholder)[0].scrollHeight) - 700)) {
+        if (($(config.element).scrollTop()) >= (($(config.placeholder)[0].scrollHeight) - 950)) {
             if (working === false) {
                 working = true;
                 $.getJSON({
